@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Add contacts in CRM </title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwapio CRM - Contacts</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #81c784;
+            --dark-green: #1b5e20;
+            --leaf-green: #689f38;
+            --bark-brown: #5d4037;
+            --wood-light: #8d6e63;
+            --sky-blue: #bbdefb;
+            --cloud-white: #f5f5f5;
+            --moss-green: #558b2f;
+            --bg-color: #F4F6F8;
+            --highlight-yellow: #fff9c4;
+            --kwapio-blue: #0a2540;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: #263238;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Top Navigation */
+        .top-nav {
+            grid-column: 2;
+            grid-row: 1;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            background-color: var(--kwapio-blue);
+            padding: 0 20px;
+            height: 60px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: white;
+        }
+        
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        /* Contacts Filters */
+        .filter-section {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .crm-filters {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .total-contacts {
+            font-weight: 600;
+            color: var(--bark-brown);
+            padding: 0 20px;
+        }
+        
+        .filter-dropdown {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-box {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            min-width: 200px;
+        }
+
+        /* User Profile */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--kwapio-blue);
+        }
+        
+        /* Left Navigation */
+        .left-nav {
+            grid-column: 1;
+            grid-row: 1 / span 2;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #455A64;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(129, 199, 132, 0.1);
+            color: var(--dark-green);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(129, 199, 132, 0.2);
+            color: var(--dark-green);
+            border-left: 3px solid var(--leaf-green);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Additional navigation items */
+        .nav-footer {
+            margin-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+        }
+
+        .nav-footer-item {
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            color: #78909C;
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-footer-item:hover {
+            color: var(--dark-green);
+        }
+        
+        /* Main Content - Contacts */
+        .main-content {
+            grid-column: 2;
+            grid-row: 2;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .contacts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .contacts-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--kwapio-blue);
+        }
+        
+        .add-contact-btn {
+            background-color: var(--leaf-green);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .add-contact-btn:hover {
+            background-color: var(--dark-green);
+        }
+        
+        /* Contacts Table */
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .contacts-table th {
+            background-color: var(--kwapio-blue);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .contacts-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+        }
+        
+        .contacts-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .contacts-table tr:hover {
+            background-color: rgba(129, 199, 132, 0.05);
+        }
+        
+        .contact-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .contact-profile img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .contact-name {
+            font-weight: 500;
+            color: var(--kwapio-blue);
+        }
+        
+        .contact-company {
+            font-size: 0.9rem;
+            color: #607d8b;
+        }
+        
+        .confidence-score {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .score-high {
+            background-color: #c8e6c9;
+            color: var(--dark-green);
+        }
+        
+        .score-medium {
+            background-color: #fff9c4;
+            color: #f57f17;
+        }
+        
+        .score-low {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+        
+        .last-contact {
+            font-size: 0.9rem;
+            color: #78909c;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--kwapio-blue);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .action-btn:hover {
+            background-color: rgba(10, 37, 64, 0.1);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px 0;
+        }
+        
+        .page-info {
+            font-size: 0.9rem;
+            color: #607d8b;
+        }
+        
+        .page-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-btn:hover {
+            background-color: rgba(129, 199, 132, 0.1);
+            border-color: var(--light-green);
+        }
+        
+        .page-btn.active {
+            background-color: var(--leaf-green);
+            color: white;
+            border-color: var(--leaf-green);
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Add Contact Form Slider */
+        .form-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            justify-content: flex-end;
+        }
+        
+        .form-overlay.active {
+            display: flex;
+        }
+        
+        .contact-form-container {
+            width: 600px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .form-overlay.active .contact-form-container {
+            transform: translateX(0);
+        }
+        
+        .form-header {
+            padding: 20px;
+            background-color: var(--kwapio-blue);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+        
+        .close-form {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .contact-form {
+            padding: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            color: var(--kwapio-blue);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+            margin-bottom: 10px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #546e7a;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #cfd8dc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--leaf-green);
+            box-shadow: 0 0 0 2px rgba(129, 199, 132, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+            background-color: #f5f7f8;
+            position: sticky;
+            bottom: 0;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--leaf-green);
+            color: white;
+            border: 1px solid var(--leaf-green);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+            border-color: var(--dark-green);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--kwapio-blue);
+            border: 1px solid #cfd8dc;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f5f7f8;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-group input {
+            margin-right: 8px;
+        }
+        
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-upload-btn {
+            background-color: #f5f7f8;
+            border: 1px dashed #cfd8dc;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .file-upload-btn:hover {
+            background-color: #eceff1;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            
+            .left-nav {
+                display: none;
+            }
+            
+            .top-nav {
+                grid-column: 1;
+            }
+            
+            .main-content {
+                grid-column: 1;
+            }
+            
+            .filter-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .contacts-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .contact-form-container {
+                width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="https://static.wixstatic.com/media/3e3b49_66c20b1628f6452ba588601d7fe9245f~mv2.png/v1/fill/w_734,h_128,al_c,lg_1,q_85,enc_avif,quality_auto/Kwapio_Branding-02%201.png" alt="Kwapio Logo">
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="crm-filters">
+                <select class="filter-dropdown">
+                    <option>All Contacts</option>
+                    <option>Recently Added</option>
+                    <option>Recently Contacted</option>
+                    <option>High Confidence</option>
+                    <option>Needs Follow-up</option>
+                </select>
+                
+                <select class="filter-dropdown">
+                    <option>All Companies</option>
+                    <option>GreenTech Solutions</option>
+                    <option>EcoBuild Architects</option>
+                    <option>Forest Analytics</option>
+                    <option>Wilderness Software</option>
+                </select>
+                
+                <select class="filter-dropdown">
+                    <option>All Locations</option>
+                    <option>North America</option>
+                    <option>Europe</option>
+                    <option>Asia</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search contacts...">
+                <div class="total-contacts">Total: 24 contacts</div>
+                <div class="user-profile">
+                    <span class="user-name">Gokul</span>
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQGeR67U0Spriw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1713164916508?e=2147483647&v=beta&t=xW6V9Tp0PqZ14pPWyJGyQd8fKijDXi-FjHDR6-e7cqk" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Left Navigation -->
+    <div class="left-nav">
+        <a href="#" class="nav-item">
+            <i>📊</i> Dashboard
+        </a>
+        <a href="#" class="nav-item active">
+            <i>👥</i> Contacts
+        </a>
+        <a href="#" class="nav-item">
+            <i>💼</i> Deals
+        </a>
+        <a href="#" class="nav-item">
+            <i>📅</i> Calendar
+        </a>
+        <a href="#" class="nav-item">
+            <i>📈</i> Reports
+        </a>
+        <a href="#" class="nav-item">
+            <i>⚙️</i> Settings
+        </a>
+
+        <!-- Additional navigation items -->
+        <div class="nav-footer">
+            <a href="#" class="nav-footer-item">Workspace</a>
+            <a href="#" class="nav-footer-item">Drive</a>
+            <a href="#" class="nav-footer-item">Organization</a>
+            <a href="#" class="nav-footer-item">Admin Console</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="contacts-header">
+            <h1 class="contacts-title">Contacts</h1>
+            <button class="add-contact-btn" id="addContactBtn">+ Add Contact</button>
+        </div>
+        
+        <table class="contacts-table">
+            <thead>
+                <tr>
+                    <th>Contact</th>
+                    <th>Company</th>
+                    <th>Employees</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Last Contact</th>
+                    <th>Confidence</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="contact-profile">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
+                            <div>
+                                <div class="contact-name">Sarah Johnson</div>
+                                <div class="contact-company">VP of Sales</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>GreenTech Solutions</td>
+                    <td>250</td>
+                    <td>sarah.johnson@greentech.com</td>
+                    <td>(415) 555-0192</td>
+                    <td class="last-contact">2 days ago</td>
+                    <td><span class="confidence-score score-high">85%</span></td>
+                    <td>
+                        <button class="action-btn">✉️</button>
+                        <button class="action-btn">📞</button>
+                        <button class="action-btn">⋮</button>
+                    </td>
+                </tr>
+                <!-- Additional rows would be here -->
+
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
+            <div>
+                <div class="contact-name">Michael Chen</div>
+                <div class="contact-company">CTO</div>
+            </div>
+        </div>
+    </td>
+    <td>DataFlow Systems</td>
+    <td>180</td>
+    <td>michael.chen@dataflow.com</td>
+    <td>(212) 555-0156</td>
+    <td class="last-contact">1 day ago</td>
+    <td><span class="confidence-score score-medium">72%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Rodriguez">
+            <div>
+                <div class="contact-name">Emily Rodriguez</div>
+                <div class="contact-company">Marketing Director</div>
+            </div>
+        </div>
+    </td>
+    <td>BrandVision</td>
+    <td>195</td>
+    <td>emily.rodriguez@brandvision.com</td>
+    <td>(310) 555-0189</td>
+    <td class="last-contact">3 hours ago</td>
+    <td><span class="confidence-score score-high">88%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="David Wilson">
+            <div>
+                <div class="contact-name">David Wilson</div>
+                <div class="contact-company">CFO</div>
+            </div>
+        </div>
+    </td>
+    <td>FinTech Global</td>
+    <td>220</td>
+    <td>david.wilson@fintechglobal.com</td>
+    <td>(617) 555-0167</td>
+    <td class="last-contact">1 week ago</td>
+    <td><span class="confidence-score score-low">62%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Jessica Kim">
+            <div>
+                <div class="contact-name">Jessica Kim</div>
+                <div class="contact-company">Product Manager</div>
+            </div>
+        </div>
+    </td>
+    <td>CloudNine Technologies</td>
+    <td>175</td>
+    <td>jessica.kim@cloudnine.com</td>
+    <td>(206) 555-0134</td>
+    <td class="last-contact">5 days ago</td>
+    <td><span class="confidence-score score-medium">75%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="Robert Taylor">
+            <div>
+                <div class="contact-name">Robert Taylor</div>
+                <div class="contact-company">Sales Director</div>
+            </div>
+        </div>
+    </td>
+    <td>SalesForce Pro</td>
+    <td>210</td>
+    <td>robert.taylor@salesforcepro.com</td>
+    <td>(415) 555-0178</td>
+    <td class="last-contact">Just now</td>
+    <td><span class="confidence-score score-high">91%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Amanda Lee">
+            <div>
+                <div class="contact-name">Amanda Lee</div>
+                <div class="contact-company">HR Director</div>
+            </div>
+        </div>
+    </td>
+    <td>TalentFirst</td>
+    <td>160</td>
+    <td>amanda.lee@talentfirst.com</td>
+    <td>(650) 555-0145</td>
+    <td class="last-contact">Yesterday</td>
+    <td><span class="confidence-score score-medium">68%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="James Wilson">
+            <div>
+                <div class="contact-name">James Wilson</div>
+                <div class="contact-company">Operations Manager</div>
+            </div>
+        </div>
+    </td>
+    <td>LogiChain Solutions</td>
+    <td>185</td>
+    <td>james.wilson@logichain.com</td>
+    <td>(312) 555-0193</td>
+    <td class="last-contact">4 days ago</td>
+    <td><span class="confidence-score score-high">82%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/56.jpg" alt="Olivia Martinez">
+            <div>
+                <div class="contact-name">Olivia Martinez</div>
+                <div class="contact-company">Creative Director</div>
+            </div>
+        </div>
+    </td>
+    <td>PixelPerfect</td>
+    <td>195</td>
+    <td>olivia.martinez@pixelperfect.com</td>
+    <td>(213) 555-0162</td>
+    <td class="last-contact">1 hour ago</td>
+    <td><span class="confidence-score score-high">87%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Daniel Brown">
+            <div>
+                <div class="contact-name">Daniel Brown</div>
+                <div class="contact-company">IT Director</div>
+            </div>
+        </div>
+    </td>
+    <td>CyberNet Security</td>
+    <td>230</td>
+    <td>daniel.brown@cybernet.com</td>
+    <td>(202) 555-0151</td>
+    <td class="last-contact">3 days ago</td>
+    <td><span class="confidence-score score-medium">73%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/78.jpg" alt="Sophia Garcia">
+            <div>
+                <div class="contact-name">Sophia Garcia</div>
+                <div class="contact-company">Customer Success</div>
+            </div>
+        </div>
+    </td>
+    <td>SaaS Partners</td>
+    <td>170</td>
+    <td>sophia.garcia@saaspartners.com</td>
+    <td>(415) 555-0183</td>
+    <td class="last-contact">6 days ago</td>
+    <td><span class="confidence-score score-medium">70%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="William Johnson">
+            <div>
+                <div class="contact-name">William Johnson</div>
+                <div class="contact-company">VP Engineering</div>
+            </div>
+        </div>
+    </td>
+    <td>DevOps Unlimited</td>
+    <td>240</td>
+    <td>william.johnson@devops.com</td>
+    <td>(512) 555-0172</td>
+    <td class="last-contact">Today</td>
+    <td><span class="confidence-score score-high">89%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/23.jpg" alt="Emma Davis">
+            <div>
+                <div class="contact-name">Emma Davis</div>
+                <div class="contact-company">Content Strategist</div>
+            </div>
+        </div>
+    </td>
+    <td>ContentFirst</td>
+    <td>155</td>
+    <td>emma.davis@contentfirst.com</td>
+    <td>(646) 555-0148</td>
+    <td class="last-contact">2 weeks ago</td>
+    <td><span class="confidence-score score-low">58%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/88.jpg" alt="Christopher Lee">
+            <div>
+                <div class="contact-name">Christopher Lee</div>
+                <div class="contact-company">Analytics Lead</div>
+            </div>
+        </div>
+    </td>
+    <td>DataInsight</td>
+    <td>225</td>
+    <td>christopher.lee@datainsight.com</td>
+    <td>(617) 555-0195</td>
+    <td class="last-contact">Yesterday</td>
+    <td><span class="confidence-score score-high">84%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/90.jpg" alt="Ava Thompson">
+            <div>
+                <div class="contact-name">Ava Thompson</div>
+                <div class="contact-company">UX Designer</div>
+            </div>
+        </div>
+    </td>
+    <td>DesignHub</td>
+    <td>165</td>
+    <td>ava.thompson@designhub.com</td>
+    <td>(415) 555-0165</td>
+    <td class="last-contact">1 month ago</td>
+    <td><span class="confidence-score score-low">55%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Matthew Clark">
+            <div>
+                <div class="contact-name">Matthew Clark</div>
+                <div class="contact-company">Business Development</div>
+            </div>
+        </div>
+    </td>
+    <td>Growth Partners</td>
+    <td>190</td>
+    <td>matthew.clark@growthpartners.com</td>
+    <td>(212) 555-0182</td>
+    <td class="last-contact">3 days ago</td>
+    <td><span class="confidence-score score-medium">77%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/34.jpg" alt="Isabella Rodriguez">
+            <div>
+                <div class="contact-name">Isabella Rodriguez</div>
+                <div class="contact-company">PR Manager</div>
+            </div>
+        </div>
+    </td>
+    <td>MediaConnect</td>
+    <td>175</td>
+    <td>isabella.rodriguez@mediaconnect.com</td>
+    <td>(310) 555-0176</td>
+    <td class="last-contact">1 week ago</td>
+    <td><span class="confidence-score score-medium">71%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/99.jpg" alt="Ethan Martinez">
+            <div>
+                <div class="contact-name">Ethan Martinez</div>
+                <div class="contact-company">Product Owner</div>
+            </div>
+        </div>
+    </td>
+    <td>AgileWorks</td>
+    <td>200</td>
+    <td>ethan.martinez@agileworks.com</td>
+    <td>(206) 555-0139</td>
+    <td class="last-contact">Today</td>
+    <td><span class="confidence-score score-high">86%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mia Hernandez">
+            <div>
+                <div class="contact-name">Mia Hernandez</div>
+                <div class="contact-company">Sales Executive</div>
+            </div>
+        </div>
+    </td>
+    <td>RevenueBoost</td>
+    <td>210</td>
+    <td>mia.hernandez@revenueboost.com</td>
+    <td>(415) 555-0191</td>
+    <td class="last-contact">2 days ago</td>
+    <td><span class="confidence-score score-high">83%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/77.jpg" alt="Alexander Wilson">
+            <div>
+                <div class="contact-name">Alexander Wilson</div>
+                <div class="contact-company">Legal Counsel</div>
+            </div>
+        </div>
+    </td>
+    <td>Corporate Law Partners</td>
+    <td>245</td>
+    <td>alexander.wilson@corplaw.com</td>
+    <td>(212) 555-0197</td>
+    <td class="last-contact">1 month ago</td>
+    <td><span class="confidence-score score-medium">65%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/67.jpg" alt="Charlotte Moore">
+            <div>
+                <div class="contact-name">Charlotte Moore</div>
+                <div class="contact-company">Events Manager</div>
+            </div>
+        </div>
+    </td>
+    <td>EventPro</td>
+    <td>160</td>
+    <td>charlotte.moore@eventpro.com</td>
+    <td>(310) 555-0168</td>
+    <td class="last-contact">5 days ago</td>
+    <td><span class="confidence-score score-medium">69%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Benjamin Taylor">
+            <div>
+                <div class="contact-name">Benjamin Taylor</div>
+                <div class="contact-company">Support Manager</div>
+            </div>
+        </div>
+    </td>
+    <td>HelpDesk Plus</td>
+    <td>180</td>
+    <td>benjamin.taylor@helpdeskplus.com</td>
+    <td>(415) 555-0184</td>
+    <td class="last-contact">Just now</td>
+    <td><span class="confidence-score score-high">90%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/89.jpg" alt="Abigail Adams">
+            <div>
+                <div class="contact-name">Abigail Adams</div>
+                <div class="contact-company">Research Director</div>
+            </div>
+        </div>
+    </td>
+    <td>Insight Analytics</td>
+    <td>230</td>
+    <td>abigail.adams@insight.com</td>
+    <td>(617) 555-0179</td>
+    <td class="last-contact">1 day ago</td>
+    <td><span class="confidence-score score-high">88%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/66.jpg" alt="Daniel Harris">
+            <div>
+                <div class="contact-name">Daniel Harris</div>
+                <div class="contact-company">QA Lead</div>
+            </div>
+        </div>
+    </td>
+    <td>QualityFirst</td>
+    <td>195</td>
+    <td>daniel.harris@qualityfirst.com</td>
+    <td>(206) 555-0159</td>
+    <td class="last-contact">3 weeks ago</td>
+    <td><span class="confidence-score score-medium">67%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Elizabeth Scott">
+            <div>
+                <div class="contact-name">Elizabeth Scott</div>
+                <div class="contact-company">Finance Manager</div>
+            </div>
+        </div>
+    </td>
+    <td>Capital Partners</td>
+    <td>220</td>
+    <td>elizabeth.scott@capital.com</td>
+    <td>(212) 555-0163</td>
+    <td class="last-contact">2 days ago</td>
+    <td><span class="confidence-score score-high">84%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Jackson Baker">
+            <div>
+                <div class="contact-name">Jackson Baker</div>
+                <div class="contact-company">Infrastructure Lead</div>
+            </div>
+        </div>
+    </td>
+    <td>CloudScale</td>
+    <td>240</td>
+    <td>jackson.baker@cloudscale.com</td>
+    <td>(415) 555-0198</td>
+    <td class="last-contact">1 week ago</td>
+    <td><span class="confidence-score score-medium">76%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="contact-profile">
+            <img src="https://randomuser.me/api/portraits/women/11.jpg" alt="Victoria King">
+            <div>
+                <div class="contact-name">Victoria King</div>
+                <div class="contact-company">Partnerships</div>
+            </div>
+        </div>
+    </td>
+    <td>Alliance Network</td>
+    <td>200</td>
+    <td>victoria.king@alliance.com</td>
+    <td>(310) 555-0174</td>
+    <td class="last-contact">Yesterday</td>
+    <td><span class="confidence-score score-high">89%</span></td>
+    <td>
+        <button class="action-btn">✉️</button>
+        <button class="action-btn">📞</button>
+        <button class="action-btn">⋮</button>
+    </td>
+</tr>
+            </tbody>
+        </table>
+        
+        <div class="pagination">
+            <div class="page-info">Showing 1-8 of 24 contacts</div>
+            <div class="page-buttons">
+                <button class="page-btn" disabled>Previous</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Contact Form Slider -->
+    <div class="form-overlay" id="formOverlay">
+        <div class="contact-form-container">
+            <div class="form-header">
+                <h2 class="form-title">Add New Contact</h2>
+                <button class="close-form" id="closeForm">×</button>
+            </div>
+            
+            <form class="contact-form" id="contactForm">
+                <div class="form-section">
+                    <h3 class="section-title">Basic Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" class="form-control" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="jobTitle">Job Title</label>
+                            <input type="text" id="jobTitle" class="form-control" placeholder="e.g., Marketing Manager">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyName">Company Name</label>
+                            <input type="text" id="companyName" class="form-control" placeholder="Enter company name">
+                        </div>
+                        <div class="form-group">
+                            <label for="employees">Number of Employees</label>
+                            <input type="number" id="employees" class="form-control" placeholder="Enter number">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title">Contact Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" placeholder="e.g., user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="workPhone">Phone Number (Work)</label>
+                            <input type="tel" id="workPhone" class="form-control" placeholder="Enter work phone number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mobilePhone">Phone Number (Mobile)</label>
+                            <input type="tel" id="mobilePhone" class="form-control" placeholder="Enter mobile number">
+                        </div>
+                        <div class="form-group">
+                            <label for="fax">Fax Number</label>
+                            <input type="tel" id="fax" class="form-control" placeholder="Enter fax number (if any)">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title">Address Information</h3>
+                    <div class="form-group">
+                        <label for="workAddress">Work Address</label>
+                        <textarea id="workAddress" class="form-control" placeholder="Enter office address"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mailingAddress">Mailing Address</label>
+                        <textarea id="mailingAddress" class="form-control" placeholder="Enter mailing address"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" class="form-control" placeholder="Enter city">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" class="form-control" placeholder="Enter state">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">ZIP / Postal Code</label>
+                            <input type="text" id="zip" class="form-control" placeholder="Enter ZIP or postal code">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <select id="country" class="form-control">
+                            <option value="">Select country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="AU">Australia</option>
+                            <option value="IN">India</option>
+                            <option value="JP">Japan</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title">Preferences & Settings</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="communicationChannel">Preferred Communication Channel</label>
+                            <select id="communicationChannel" class="form-control">
+                                <option value="">Select preferred channel</option>
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                                <option value="sms">SMS</option>
+                                <option value="any">Any</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timeZone">Time Zone</label>
+                            <select id="timeZone" class="form-control">
+                                <option value="">Select time zone</option>
+                                <option value="ET">Eastern Time (ET)</option>
+                                <option value="CT">Central Time (CT)</option>
+                                <option value="MT">Mountain Time (MT)</option>
+                                <option value="PT">Pacific Time (PT)</option>
+                                <option value="GMT">GMT</option>
+                                <option value="CET">Central European Time (CET)</option>
+                                <option value="IST">Indian Standard Time (IST)</option>
+                                <option value="JST">Japan Standard Time (JST)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactOwner">Contact Owner</label>
+                            <select id="contactOwner" class="form-control">
+                                <option value="">Assign contact owner</option>
+                                <option value="gokul">Gokul</option>
+                                <option value="john">John Doe</option>
+                                <option value="jane">Jane Smith</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSource">Contact Source</label>
+                            <select id="contactSource" class="form-control">
+                                <option value="">Select source</option>
+                                <option value="website">Website</option>
+                                <option value="event">Event</option>
+                                <option value="referral">Referral</option>
+                                <option value="ad">Ad Campaign</option>
+                                <option value="social">Social Media</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tags">Tags / Labels</label>
+                        <select id="tags" class="form-control" multiple>
+                            <option value="vip">VIP</option>
+                            <option value="investor">Investor</option>
+                            <option value="lead">Lead</option>
+                            <option value="partner">Partner</option>
+                            <option value="customer">Customer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="marketingOptIn">
+                        <label for="marketingOptIn">Yes, I agree to receive updates</label>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title">Additional Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lastInteraction">Last Interaction Date</label>
+                            <input type="date" id="lastInteraction" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="nextFollowUp">Next Follow-up Date</label>
+                            <input type="date" id="nextFollowUp" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" class="form-control" placeholder="Add any internal notes"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Attachments</label>
+                        <div class="file-upload">
+                            <input type="file" id="attachments" style="display: none;">
+                            <button type="button" class="file-upload-btn" onclick="document.getElementById('attachments').click()">Choose Files</button>
+                            <span id="fileNames">No files selected</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelForm">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Contact</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form slider functionality
+            const addContactBtn = document.getElementById('addContactBtn');
+            const formOverlay = document.getElementById('formOverlay');
+            const closeForm = document.getElementById('closeForm');
+            const cancelForm = document.getElementById('cancelForm');
+            
+            addContactBtn.addEventListener('click', function() {
+                formOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeForm.addEventListener('click', function() {
+                formOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            cancelForm.addEventListener('click', function() {
+                formOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // Close form when clicking outside
+            formOverlay.addEventListener('click', function(e) {
+                if (e.target === formOverlay) {
+                    formOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Form submission
+            const contactForm = document.getElementById('contactForm');
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Contact would be saved here');
+                formOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                // In a real app, you would send the form data to a server here
+            });
+            
+            // File upload display
+            const attachmentsInput = document.getElementById('attachments');
+            const fileNamesDisplay = document.getElementById('fileNames');
+            
+            attachmentsInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileNamesDisplay.textContent = this.files.length === 1 
+                        ? this.files[0].name 
+                        : `${this.files.length} files selected`;
+                } else {
+                    fileNamesDisplay.textContent = 'No files selected';
+                }
+            });
+            
+            // Action buttons functionality
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const action = this.textContent;
+                    if (action === '✉️') {
+                        alert('Email contact functionality would go here');
+                    } else if (action === '📞') {
+                        alert('Call contact functionality would go here');
+                    } else if (action === '⋮') {
+                        alert('More options menu would appear here');
+                    }
+                    e.stopPropagation();
+                });
+            });
+            
+            // Row click functionality
+            const tableRows = document.querySelectorAll('.contacts-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    alert('Would navigate to contact details page for: ' + 
+                          this.querySelector('.contact-name').textContent);
+                });
+            });
+            
+            // Pagination functionality
+            const pageButtons = document.querySelectorAll('.page-btn:not(.active):not(:disabled)');
+            pageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Would load page ' + this.textContent + ' of contacts');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
