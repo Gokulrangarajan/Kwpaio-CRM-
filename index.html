@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Kwapio CRM </title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwapio CRM</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #81c784;
+            --dark-green: #1b5e20;
+            --leaf-green: #689f38;
+            --bark-brown: #5d4037;
+            --wood-light: #8d6e63;
+            --sky-blue: #bbdefb;
+            --cloud-white: #f5f5f5;
+            --moss-green: #558b2f;
+            --bg-color: #F4F6F8;
+            --highlight-yellow: #fff9c4;
+            --kwapio-blue: #0a2540;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: #263238;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Top Navigation */
+        .top-nav {
+            grid-column: 2;
+            grid-row: 1;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            background-color: var(--kwapio-blue);
+            padding: 0 20px;
+            height: 60px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: white;
+        }
+        
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        /* CRM Filters */
+        .filter-section {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .crm-filters {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .total-deals {
+            font-weight: 600;
+            color: var(--bark-brown);
+            padding: 0 20px;
+        }
+        
+        .filter-dropdown {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-box {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            min-width: 200px;
+        }
+
+        /* User Profile */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--kwapio-blue);
+        }
+        
+        /* Left Navigation */
+        .left-nav {
+            grid-column: 1;
+            grid-row: 1 / span 2;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #455A64;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(129, 199, 132, 0.1);
+            color: var(--dark-green);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(129, 199, 132, 0.2);
+            color: var(--dark-green);
+            border-left: 3px solid var(--leaf-green);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Additional navigation items */
+        .nav-footer {
+            margin-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+        }
+
+        .nav-footer-item {
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            color: #78909C;
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-footer-item:hover {
+            color: var(--dark-green);
+        }
+        
+        /* Main Content */
+        .main-content {
+            grid-column: 2;
+            grid-row: 2;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .kanban-board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            height: calc(100vh - 180px);
+        }
+        
+        .kanban-column {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 280px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--leaf-green);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .column-header {
+            font-weight: 600;
+            color: var(--dark-green);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-count {
+            background-color: var(--light-green);
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-count.changed {
+            animation: pulse 0.5s ease-in-out;
+            background-color: var(--moss-green);
+            transform: scale(1.2);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1.2); }
+        }
+        
+        .kanban-cards {
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+        }
+        
+        .kanban-card {
+            background-color: white;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            cursor: grab;
+            transition: all 0.2s ease;
+            border-left: 4px solid var(--leaf-green);
+        }
+        
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .kanban-card:active {
+            cursor: grabbing;
+        }
+        
+        .kanban-card.dragging {
+            opacity: 0.5;
+            background-color: var(--highlight-yellow);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark-green);
+        }
+        
+        .card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .deal-size {
+            font-weight: 500;
+            color: var(--bark-brown);
+        }
+        
+        .contact-name {
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .contact-name::before {
+            content: "👤";
+        }
+        
+        .status-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        .priority-high {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+        
+        .priority-medium {
+            background-color: #fff9c4;
+            color: #f57f17;
+        }
+        
+        .priority-low {
+            background-color: #c8e6c9;
+            color: var(--dark-green);
+        }
+        
+        .add-card {
+            margin-top: 15px;
+            padding: 8px;
+            background-color: rgba(129, 199, 132, 0.2);
+            border: 1px dashed var(--light-green);
+            border-radius: 6px;
+            color: var(--dark-green);
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .add-card:hover {
+            background-color: rgba(129, 199, 132, 0.3);
+        }
+        
+        .column-footer {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-weight: 500;
+            color: var(--bark-brown);
+            text-align: right;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            
+            .left-nav {
+                display: none;
+            }
+            
+            .top-nav {
+                grid-column: 1;
+            }
+            
+            .main-content {
+                grid-column: 1;
+            }
+            
+            .kanban-board {
+                flex-direction: column;
+            }
+            
+            .kanban-column {
+                min-width: auto;
+            }
+            
+            .filter-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="https://static.wixstatic.com/media/3e3b49_66c20b1628f6452ba588601d7fe9245f~mv2.png/v1/fill/w_734,h_128,al_c,lg_1,q_85,enc_avif,quality_auto/Kwapio_Branding-02%201.png" alt="Kwapio Logo">
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="crm-filters">
+                <select class="filter-dropdown">
+                    <option>Deal Owner</option>
+                    <option>John Doe</option>
+                    <option>Jane Smith</option>
+                    <option>All Owners</option>
+                </select>
+                
+                <select class="filter-dropdown">
+                    <option>Date Created</option>
+                    <option>Today</option>
+                    <option>This Week</option>
+                    <option>This Month</option>
+                    <option>Custom Range</option>
+                </select>
+                
+                <select class="filter-dropdown">
+                    <option>Closed Date</option>
+                    <option>Today</option>
+                    <option>This Week</option>
+                    <option>This Month</option>
+                    <option>Custom Range</option>
+                </select>
+                
+                <select class="filter-dropdown">
+                    <option>All Filters</option>
+                    <option>Priority</option>
+                    <option>Deal Size</option>
+                    <option>Stage</option>
+                </select>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search deals...">
+                <div class="total-deals">Total: $860,500</div>
+                <div class="user-profile">
+                    <span class="user-name">Gokul</span>
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQGeR67U0Spriw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1713164916508?e=2147483647&v=beta&t=xW6V9Tp0PqZ14pPWyJGyQd8fKijDXi-FjHDR6-e7cqk" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Left Navigation -->
+    <div class="left-nav">
+        <a href="#" class="nav-item active">
+            <i>📊</i> Dashboard
+        </a>
+        <a href="#" class="nav-item">
+            <i>👥</i> Contacts
+        </a>
+        <a href="#" class="nav-item">
+            <i>💼</i> Deals
+        </a>
+        <a href="#" class="nav-item">
+            <i>📅</i> Calendar
+        </a>
+        <a href="#" class="nav-item">
+            <i>📈</i> Reports
+        </a>
+        <a href="#" class="nav-item">
+            <i>⚙️</i> Settings
+        </a>
+
+        <!-- Additional navigation items -->
+        <div class="nav-footer">
+            <a href="#" class="nav-footer-item">Workspace</a>
+            <a href="#" class="nav-footer-item">Drive</a>
+            <a href="#" class="nav-footer-item">Organization</a>
+            <a href="#" class="nav-footer-item">Admin Console</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="kanban-board" id="kanbanBoard">
+            <!-- Contacted / Initial Outreach Column -->
+            <div class="kanban-column" data-status="contacted">
+                <div class="column-header">
+                    <span>Contacted / Initial Outreach</span>
+                    <span class="card-count">3</span>
+                </div>
+                <div class="kanban-cards" data-status="contacted">
+                    <div class="kanban-card" draggable="true" data-id="1">
+                        <div class="card-title">GreenTech Solutions</div>
+                        <div class="card-details">
+                            <div class="deal-size">$25,000</div>
+                            <div class="contact-name">Sarah Johnson</div>
+                            <div class="status-tag priority-medium">Medium</div>
+                        </div>
+                    </div>
+                    <div class="kanban-card" draggable="true" data-id="2">
+                        <div class="card-title">EcoBuild Architects</div>
+                        <div class="card-details">
+                            <div class="deal-size">$42,000</div>
+                            <div class="contact-name">Michael Chen</div>
+                            <div class="status-tag priority-high">High</div>
+                        </div>
+                    </div>
+                    <div class="kanban-card" draggable="true" data-id="3">
+                        <div class="card-title">Forest Analytics</div>
+                        <div class="card-details">
+                            <div class="deal-size">$15,500</div>
+                            <div class="contact-name">Emma Wilson</div>
+                            <div class="status-tag priority-low">Low</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $82,500</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- Discovery Column -->
+            <div class="kanban-column" data-status="discovery">
+                <div class="column-header">
+                    <span>Discovery</span>
+                    <span class="card-count">2</span>
+                </div>
+                <div class="kanban-cards" data-status="discovery">
+                    <div class="kanban-card" draggable="true" data-id="4">
+                        <div class="card-title">Wilderness Software</div>
+                        <div class="card-details">
+                            <div class="deal-size">$38,000</div>
+                            <div class="contact-name">David Park</div>
+                            <div class="status-tag priority-high">High</div>
+                        </div>
+                    </div>
+                    <div class="kanban-card" draggable="true" data-id="5">
+                        <div class="card-title">Organic Digital</div>
+                        <div class="card-details">
+                            <div class="deal-size">$22,000</div>
+                            <div class="contact-name">Lisa Rodriguez</div>
+                            <div class="status-tag priority-medium">Medium</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $60,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- Qualified Column -->
+            <div class="kanban-column" data-status="qualified">
+                <div class="column-header">
+                    <span>Qualified</span>
+                    <span class="card-count">1</span>
+                </div>
+                <div class="kanban-cards" data-status="qualified">
+                    <div class="kanban-card" draggable="true" data-id="6">
+                        <div class="card-title">Mountain View Tech</div>
+                        <div class="card-details">
+                            <div class="deal-size">$75,000</div>
+                            <div class="contact-name">James Peterson</div>
+                            <div class="status-tag priority-high">High</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $75,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- Proposal Column -->
+            <div class="kanban-column" data-status="proposal">
+                <div class="column-header">
+                    <span>Proposal</span>
+                    <span class="card-count">2</span>
+                </div>
+                <div class="kanban-cards" data-status="proposal">
+                    <div class="kanban-card" draggable="true" data-id="7">
+                        <div class="card-title">Riverbank Industries</div>
+                        <div class="card-details">
+                            <div class="deal-size">$120,000</div>
+                            <div class="contact-name">Olivia Smith</div>
+                            <div class="status-tag priority-high">High</div>
+                        </div>
+                    </div>
+                    <div class="kanban-card" draggable="true" data-id="8">
+                        <div class="card-title">Sunrise Partners</div>
+                        <div class="card-details">
+                            <div class="deal-size">$65,000</div>
+                            <div class="contact-name">Robert Yang</div>
+                            <div class="status-tag priority-medium">Medium</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $185,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- Demo Scheduled Column -->
+            <div class="kanban-column" data-status="demo">
+                <div class="column-header">
+                    <span>Demo Scheduled</span>
+                    <span class="card-count">1</span>
+                </div>
+                <div class="kanban-cards" data-status="demo">
+                    <div class="kanban-card" draggable="true" data-id="9">
+                        <div class="card-title">Evergreen Systems</div>
+                        <div class="card-details">
+                            <div class="deal-size">$95,000</div>
+                            <div class="contact-name">Sophia Martinez</div>
+                            <div class="status-tag priority-high">High</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $95,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- Negotiation Column -->
+            <div class="kanban-column" data-status="negotiation">
+                <div class="column-header">
+                    <span>Negotiation</span>
+                    <span class="card-count">1</span>
+                </div>
+                <div class="kanban-cards" data-status="negotiation">
+                    <div class="kanban-card" draggable="true" data-id="10">
+                        <div class="card-title">Timberline Solutions</div>
+                        <div class="card-details">
+                            <div class="deal-size">$150,000</div>
+                            <div class="contact-name">Daniel Kim</div>
+                            <div class="status-tag priority-high">High</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $150,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- In Discussion Column -->
+            <div class="kanban-column" data-status="discussion">
+                <div class="column-header">
+                    <span>In Discussion</span>
+                    <span class="card-count">0</span>
+                </div>
+                <div class="kanban-cards" data-status="discussion">
+                    <!-- Empty state -->
+                </div>
+                <div class="column-footer">Total: $0</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- On Hold Column -->
+            <div class="kanban-column" data-status="hold">
+                <div class="column-header">
+                    <span>On Hold</span>
+                    <span class="card-count">1</span>
+                </div>
+                <div class="kanban-cards" data-status="hold">
+                    <div class="kanban-card" draggable="true" data-id="11">
+                        <div class="card-title">Pinecone Analytics</div>
+                        <div class="card-details">
+                            <div class="deal-size">$28,000</div>
+                            <div class="contact-name">Jennifer Lee</div>
+                            <div class="status-tag priority-low">Low</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $28,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- Closed Won Column -->
+            <div class="kanban-column" data-status="won">
+                <div class="column-header">
+                    <span>Closed Won</span>
+                    <span class="card-count">2</span>
+                </div>
+                <div class="kanban-cards" data-status="won">
+                    <div class="kanban-card" draggable="true" data-id="12">
+                        <div class="card-title">Canopy Cloud</div>
+                        <div class="card-details">
+                            <div class="deal-size">$80,000</div>
+                            <div class="contact-name">Thomas Brown</div>
+                            <div class="status-tag priority-medium">Medium</div>
+                        </div>
+                    </div>
+                    <div class="kanban-card" draggable="true" data-id="13">
+                        <div class="card-title">Fern Data</div>
+                        <div class="card-details">
+                            <div class="deal-size">$45,000</div>
+                            <div class="contact-name">Amanda Clark</div>
+                            <div class="status-tag priority-medium">Medium</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $125,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+            
+            <!-- Closed Lost Column -->
+            <div class="kanban-column" data-status="lost">
+                <div class="column-header">
+                    <span>Closed Lost</span>
+                    <span class="card-count">1</span>
+                </div>
+                <div class="kanban-cards" data-status="lost">
+                    <div class="kanban-card" draggable="true" data-id="14">
+                        <div class="card-title">Mossy Systems</div>
+                        <div class="card-details">
+                            <div class="deal-size">$60,000</div>
+                            <div class="contact-name">Richard Davis</div>
+                            <div class="status-tag priority-low">Low</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-footer">Total: $60,000</div>
+                <div class="add-card">+ Add Card</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.kanban-card');
+            const columns = document.querySelectorAll('.kanban-column');
+            
+            let draggedCard = null;
+            
+            // Add event listeners for drag start
+            cards.forEach(card => {
+                card.addEventListener('dragstart', dragStart);
+            });
+            
+            // Add event listeners for drag over, enter, leave, drop for each column
+            columns.forEach(column => {
+                column.addEventListener('dragover', dragOver);
+                column.addEventListener('dragenter', dragEnter);
+                column.addEventListener('dragleave', dragLeave);
+                column.addEventListener('drop', dragDrop);
+            });
+            
+            function dragStart(e) {
+                draggedCard = this;
+                setTimeout(() => {
+                    this.classList.add('dragging');
+                }, 0);
+            }
+            
+            function dragOver(e) {
+                e.preventDefault();
+            }
+            
+            function dragEnter(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            }
+            
+            function dragLeave() {
+                this.classList.remove('drag-over');
+            }
+            
+            function dragDrop(e) {
+                this.classList.remove('drag-over');
+                
+                // Get the cards container of this column
+                const cardsContainer = this.querySelector('.kanban-cards');
+                
+                // Check if we're dropping on another card
+                const afterElement = getDragAfterElement(cardsContainer, e.clientY);
+                
+                if (afterElement == null) {
+                    cardsContainer.appendChild(draggedCard);
+                } else {
+                    cardsContainer.insertBefore(draggedCard, afterElement);
+                }
+                
+                // Update card counts with animation
+                updateCardCountsWithAnimation();
+                updateColumnTotals();
+                updateTotalDealsValue();
+            }
+            
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.kanban-card:not(.dragging)')];
+                
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+            
+            function updateCardCountsWithAnimation() {
+                columns.forEach(column => {
+                    const status = column.getAttribute('data-status');
+                    const cardCount = column.querySelector('.kanban-cards').children.length;
+                    const countElement = column.querySelector('.card-count');
+                    
+                    // Only animate if count actually changed
+                    if (parseInt(countElement.textContent) !== cardCount) {
+                        countElement.textContent = cardCount;
+                        countElement.classList.add('changed');
+                        
+                        // Remove animation class after animation completes
+                        setTimeout(() => {
+                            countElement.classList.remove('changed');
+                        }, 500);
+                    }
+                });
+            }
+            
+            function updateColumnTotals() {
+                columns.forEach(column => {
+                    const cards = column.querySelectorAll('.kanban-card');
+                    let total = 0;
+                    
+                    cards.forEach(card => {
+                        const dealSizeText = card.querySelector('.deal-size').textContent;
+                        const dealSize = parseFloat(dealSizeText.replace(/[^0-9.]/g, ''));
+                        total += dealSize;
+                    });
+                    
+                    const footer = column.querySelector('.column-footer');
+                    footer.textContent = `Total: $${total.toLocaleString()}`;
+                });
+            }
+            
+            function updateTotalDealsValue() {
+                let grandTotal = 0;
+                columns.forEach(column => {
+                    const cards = column.querySelectorAll('.kanban-card');
+                    
+                    cards.forEach(card => {
+                        const dealSizeText = card.querySelector('.deal-size').textContent;
+                        const dealSize = parseFloat(dealSizeText.replace(/[^0-9.]/g, ''));
+                        grandTotal += dealSize;
+                    });
+                });
+                
+                document.querySelector('.total-deals').textContent = `Total: $${grandTotal.toLocaleString()}`;
+            }
+            
+            // Initialize totals on load
+            updateColumnTotals();
+            updateTotalDealsValue();
+            
+            // Add card functionality
+            const addCardButtons = document.querySelectorAll('.add-card');
+            addCardButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const column = this.parentElement;
+                    const status = column.getAttribute('data-status');
+                    const cardsContainer = column.querySelector('.kanban-cards');
+                    
+                    // Generate a unique ID for the new card
+                    const newId = Date.now();
+                    
+                    // Create a new card
+                    const newCard = document.createElement('div');
+                    newCard.className = 'kanban-card';
+                    newCard.setAttribute('draggable', 'true');
+                    newCard.setAttribute('data-id', newId);
+                    
+                    // Sample data for new card
+                    const sampleCompanies = ['Forest Analytics', 'GreenTech', 'EcoBuild', 'Wilderness', 'Organic'];
+                    const sampleNames = ['Alex', 'Taylor', 'Jordan', 'Casey', 'Riley'];
+                    const sampleSizes = ['$15,000', '$22,000', '$35,000', '$18,000', '$40,000'];
+                    const priorities = ['priority-low', 'priority-medium', 'priority-high'];
+                    
+                    const randomCompany = sampleCompanies[Math.floor(Math.random() * sampleCompanies.length)];
+                    const randomName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+                    const randomSize = sampleSizes[Math.floor(Math.random() * sampleSizes.length)];
+                    const randomPriority = priorities[Math.floor(Math.random() * priorities.length)];
+                    const priorityText = randomPriority.split('-')[1].charAt(0).toUpperCase() + randomPriority.split('-')[1].slice(1);
+                    
+                    newCard.innerHTML = `
+                        <div class="card-title">${randomCompany} ${Math.floor(Math.random() * 100)}</div>
+                        <div class="card-details">
+                            <div class="deal-size">${randomSize}</div>
+                            <div class="contact-name">${randomName}</div>
+                            <div class="status-tag ${randomPriority}">${priorityText}</div>
+                        </div>
+                    `;
+                    
+                    // Add drag event to the new card
+                    newCard.addEventListener('dragstart', dragStart);
+                    
+                    // Add the new card to the container
+                    cardsContainer.appendChild(newCard);
+                    
+                    // Update card counts with animation
+                    updateCardCountsWithAnimation();
+                    updateColumnTotals();
+                    updateTotalDealsValue();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
